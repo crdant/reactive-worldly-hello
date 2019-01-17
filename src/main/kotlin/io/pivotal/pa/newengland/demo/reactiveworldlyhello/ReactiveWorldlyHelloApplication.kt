@@ -14,4 +14,5 @@ fun main(args: Array<String>) {
 val beans = beans {
 	bean<Greeter>()
 	bean<GreetingRouter>()
+	bean<GreetingRepository>()
 }

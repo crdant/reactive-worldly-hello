@@ -15,7 +15,10 @@ class Greeter () {
   @Value("\${defaultLanguage}")
   var defaultLanguage: String? = null
 
-  fun language(request: ServerRequest): Mono<ServerResponse> {
+  @Autowired
+  lateinit var repository: GreetingRepository
+
+  fun defaultLangauge(request: ServerRequest): Mono<ServerResponse> {
     return ServerResponse
       .ok()
       .contentType(MediaType.TEXT_PLAIN)
@@ -24,6 +27,17 @@ class Greeter () {
       )
   }
 
+  fun greet(request: ServerRequest): Mono<ServerResponse> {
+    val language = request.pathVariable("language")
+    val greeting = repository.findByLanguage(if (language.length != 0) language else defaultLanguage!!).first();
+
+    return ServerResponse
+      .ok()
+      .contentType(MediaType.TEXT_PLAIN)
+      .body(
+        BodyInserters.fromObject(greeting.text!!)
+      )
+  }
 }
 
 
@@ -36,7 +50,8 @@ class GreetingRouter {
   @Bean
   fun router() = router {
     (accept(TEXT_HTML) or accept(TEXT_HTML)).nest {
-      GET("/", greeter::language)
+      GET("/", greeter::defaultLangauge)
+      GET("/greeting/{language}", greeter::greet)
     }
   }
 
