@@ -1,8 +1,7 @@
 defaultLanguage: english
 
-spring:
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
+server:
+  port : 9090
 
 management:
   endpoints:
