@@ -1,22 +1,25 @@
 package io.pivotal.pa.newengland.demo.reactiveworldlyhello
 
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.web.server.SecurityWebFilterChain
-import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
-
 
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
   @Bean
-  fun permitAllSecurity(http: ServerHttpSecurity): SecurityWebFilterChain =
+  fun oauth2Security(http: ServerHttpSecurity): SecurityWebFilterChain {
     http
       .csrf().disable()
-      .authorizeExchange().pathMatchers("/greeting/**", "/greetings").permitAll()
+      .authorizeExchange().pathMatchers("/greetings", "/actuator/**").permitAll()
+            // .and()
+            // .authorizeExchange().pathMatchers("/greeting/**").hasAuthority("SCOPE_greeter.greet")
+            .anyExchange().authenticated()
       .and()
-      .build()
+      .oauth2ResourceServer()
+            .jwt()
 
+    return http.build();
+  }
 }
