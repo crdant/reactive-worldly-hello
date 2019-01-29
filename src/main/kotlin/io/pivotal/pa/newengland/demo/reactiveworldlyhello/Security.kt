@@ -13,13 +13,13 @@ public class SecurityConfig {
     http
       .csrf().disable()
       .authorizeExchange().pathMatchers("/greetings", "/actuator/**").permitAll()
-            // .and()
-            // .authorizeExchange().pathMatchers("/greeting/**").hasAuthority("SCOPE_greeter.greet")
+            .and()
+            .authorizeExchange().pathMatchers("/greeting/**").hasAuthority("SCOPE_greeter.greet")
             .anyExchange().authenticated()
       .and()
       .oauth2ResourceServer()
             .jwt()
 
-    return http.build();
+    return http.build()
   }
 }
