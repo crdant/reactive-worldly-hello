@@ -14,6 +14,8 @@ import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRep
 
 
 data class Greeting (
+  @Id
+  val id: Int? = null,
   val language: String? = null,
   val text: String? = null
 )
